@@ -10,7 +10,7 @@ def cadastrar_livro (titulo,autor,ano):
     with open ('livros.csv','r',) as arquivo:
         for line in arquivo:
             quantidade_de_livros += 1
-        codigo = int(00000000) + (quantidade_de_livros-1)
+        codigo = int(10000000) + (quantidade_de_livros-1)
         ## Essa é a parte onde é criado o codigo do livro onde usa a quantidade de livros para 
         # conseguir fazer o codigo de cada livro
 
@@ -43,7 +43,34 @@ def emprestimo_de_livro (codigo):
         writer = csv.writer(arquivo)
         writer.writerows(linha)
 
+def devolver_livro (codigo):
+    linha = []
+    livro_encontrado = 0
 
+    with open ('livros.csv','r',newline='') as arquivo:
+        buscar_livro = csv.reader(arquivo)
+        for itens in buscar_livro:
+            if itens[3] == codigo:
+                livro_encontrado = 1
+                if itens[4] == "Indisponivel":
+                    itens[4] = "Disponivel"
+                    print("O livro foi devolvido\n")
+
+                else:
+                    print("O livro já foi devolvido\n")
+            linha.append(itens)
+
+    with open ('livros.csv','w',newline='') as arquivo:
+        writer = csv.writer(arquivo)
+        writer.writerows(linha)
+
+def listar_livros ():
+    with open ('livros.csv','r') as arquivo:
+        leitor = csv.DictReader(arquivo)
+        contador = 1
+        for linha in leitor:
+                print(f"\n{contador}. Livro: {linha["titulo"]} ; Autor: {linha["autor"]} ; Ano: {linha["ano"]} ; Codigo: {linha["codigo"]} ; Status: {linha["status"]}\n")
+                contador += 1
 
 while True:
     resposta_menu = input("Bem vindo(a) biblíoteca, o que gostaria de fazer?\n1 - [CADASTRAR]\n2 - [EMPRESTAR]\n3 -- [DEVOLVER]\n4 ---- [LISTAR]\n5 ---- [BUSCAR]\n6 --- [ORDENAR]\n7 ------ [SAIR]\n")
@@ -69,9 +96,13 @@ while True:
             emprestimo_de_livro(codigo_livro)
 
         case "3":
-            pass
+            codigo_livro = input("Qual o codigo do livro que você deseja devolver?\n")
+            devolver_livro(codigo_livro)
+
         case "4":
-            pass
+            print("Todos os livros estão a seguir:")
+            listar_livros()
+
         case "5":
             pass
         case "6":

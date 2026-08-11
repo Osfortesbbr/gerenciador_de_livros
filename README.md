@@ -4,4 +4,6 @@
 - Primeiro é preciso clonar ou instalar o codigo e depois colocalo no VsCode
 - Depois clique na seta na dierita em cima e de "run" no programa
 - Após iniciar, o programa mostra o menu e é so utilizalo a partir desse ponto
-### Os requisitor técnico
+### Os requisitos técnicos
+- Foram utiliados conhecimentos sobre python e as funções dele
+- Conhecimentos em .csv também foram utilizados para fazer o sistema de salvamento das informações

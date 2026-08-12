@@ -13,56 +13,68 @@ def cadastrar_livro (titulo,autor,ano,codigo):
     ## A função faz a criação do livro e manda para a pasta livros.csv, salvando o livro cadastrado em uma lista
     # para uma próxima vez que a pessoa acesar esse codigo novamente
 
-def emprestimo_de_livro (codigo):
+def emprestimo_de_livro (titulo):
     linha = []
+    encontrou = True
+    evitar_repeticao = 1
     with open ('livros.csv','r',newline='') as arquivo:
         buscar_livro = csv.reader(arquivo)
         for itens in buscar_livro:
-            if itens[3] == codigo:
-                if itens[4] == "Disponivel":
-                    itens[4] = "Indisponivel"
-                    print("O livro foi emprestado a você\n")
+            if itens[0] == titulo:
+                if encontrou:
+                    if itens[4] == "Disponivel":
+                            encontrou = False
+                            itens[4] = "Indisponivel"
+                            evitar_repeticao -= 1
                     # Verifica se o codigo que o usuario colocou existe no livros.csv e se existir muda o status
                     # do livro pedido de "Disponivel" para "Indisponivel" por estar agora com a pessoa e faz um filro 
                     # para ver se o livro já foi empestado ou não vendo o status do livro (Diponivel ou Indisponivel)
-                else:
-                    print("O Livro já foi emprestado\n")
-                    # Se o livro já tiver sido emprestado, mostra que o livro já foi emprestado
             linha.append(itens)
 
     with open ('livros.csv','w',newline='') as arquivo:
         writer = csv.writer(arquivo)
         writer.writerows(linha)
-        # Escreve na pasta livros.csv que o livro está Indisponivel
+        if evitar_repeticao == 0:
+            print("O livro foi emprestado\n")
+        elif evitar_repeticao == 1:
+            print("O livro já foi emprestado ou não existe\n")
+        # Se o livro já tiver sido emprestado, mostra que o livro já foi emprestado e
+        # escreve na pasta livros.csv que o livro está Indisponivel
 
-def devolver_livro (codigo):
+def devolver_livro (titulo):
     linha = []
+    encontrou = True
+    evitar_repeticao = 1
     with open ('livros.csv','r',newline='') as arquivo:
         buscar_livro = csv.reader(arquivo)
         for itens in buscar_livro:
-            if itens[3] == codigo:
-                if itens[4] == "Indisponivel":
-                    itens[4] = "Disponivel"
-                    print("O livro foi devolvido\n")
+            if itens[0] == titulo:
+                if encontrou:
+                    if itens[4] == "Indisponivel":
+                        encontrou = False
+                        itens[4] = "Disponivel"
+                        evitar_repeticao -= 1
                     # Verifica se o codigo que o usuario colocou existe no livros.csv e se existir muda o status
                     # do livro pedido de "Indisponivel" para "Disponivel" por estar agora com a pessoa e faz um filro 
                     # para ver se o livro já foi empestado ou não vendo o status do livro (Diponivel ou Indisponivel)
-                else:
-                    print("O livro já foi devolvido\n")
-                    # Se o livro já tiver sido devolvido, mostra que o livro já foi devolvido
             linha.append(itens)
 
     with open ('livros.csv','w',newline='') as arquivo:
         writer = csv.writer(arquivo)
         writer.writerows(linha)
-        # Escreve na pasta livros.csv que o livro está Disponivel
+        if evitar_repeticao == 0:
+            print("O livro foi devolvido\n")
+        elif evitar_repeticao == 1:
+            print("O livro já foi devolvido ou não existe\n")
+        # Se o livro já tiver sido devolvido, mostra que o livro já foi devolvido e
+        # escreve na pasta livros.csv que o livro está Disponivel
 
 def listar_livros ():
     with open ('livros.csv','r') as arquivo:
         leitor = csv.DictReader(arquivo)
         for linha in leitor:
-                print(f" Livro: {linha["titulo"]} ; Autor: {linha["autor"]} ; Ano: {linha["ano"]} ; Codigo: {linha["codigo"]} ; Status: {linha["status"]}\n")
-                # Mostra toda a lista de livros que tem na pasta do livros.csv
+            print(f" Livro: {linha["titulo"]} ; Autor: {linha["autor"]} ; Ano: {linha["ano"]} ; Codigo: {linha["codigo"]} ; Status: {linha["status"]}\n")
+            # Mostra toda a lista de livros que tem na pasta do livros.csv
 
 def busca_de_livro_autor(autor):
     encontrou_autor = 0
@@ -125,7 +137,7 @@ while True:
                     print("Não é um número inteiro")
                     continue
                 try:
-                    codigo = int(input("Informe qual o codigo do livro?"))
+                    codigo = int(input("Informe qual o codigo do livro?\n"))
                     break
                 except ValueError:
                     print("Não é um número inteiro")
@@ -135,14 +147,14 @@ while True:
             # já o coloca como disponível utilizando a função "cadastrar_livro()"
 
         case "2":
-            codigo_livro = input("Qual o codigo do livro que você deseja pegar?\n")
-            emprestimo_de_livro(codigo_livro)
+            titulo_livro = input("Qual o título do livro que você deseja pegar?\n")
+            emprestimo_de_livro(titulo_livro)
             # Esta é a função de emprestar o livro, ela pede qual o codigo do livro e empresta para o usuario caso o codigo exista e o livro esteja
             # disponível
 
         case "3":
-            codigo_livro = input("Qual o codigo do livro que você deseja devolver?\n")
-            devolver_livro(codigo_livro)
+            titulo_livro = input("Qual o título do livro que você deseja devolver?\n")
+            devolver_livro(titulo_livro)
             # Esta é a função de devolver o livro, ela pede qual o codigo do livro e pega de volta caso o codigo exista e o livro esteja
             # indisponivel
 
@@ -152,7 +164,7 @@ while True:
             # Esta é a função que mostra todos os livros que estão na pasta livros.csv
 
         case "5":
-            escolha_de_busca = int(input("Escolha um tipo de busca\n1 ---- [Por autor]\n2 -- [Por título]\n"))
+            escolha_de_busca = int(input("Escolha um tipo de busca\n1 --- [Por autor]\n2 -- [Por título]\n"))
             if escolha_de_busca == 1:
                 nome_autor = input("Qual o nome do autor?\n")
                 busca_de_livro_autor(nome_autor)
@@ -177,7 +189,7 @@ while True:
 
                 organizar_livros(escolha_de_ordenagem)
                 break
-            # Esta é a função que mostra uma lista organizada de a cordo com o que o usuario desejar dentre as opções (título, autor e ano)
+            # Esta é a função que mostra uma lista organizada de a cordo com o que o usuario desejar dentre as opções (título,autor e ano)
         case "7":
             break
         case _:

@@ -115,7 +115,7 @@ def organizar_livros(escolha_organizacao):
         if escolha_organizacao == 3:
             lista_organizacao.sort(key=lambda lista_organizacao: int(lista_organizacao[tipo_organizacao]))
         else:
-            lista_organizacao.sort(key=lambda lista_organizacao: lista_organizacao[tipo_organizacao])
+            lista_organizacao.sort(key=lambda lista_organizacao: lista_organizacao[tipo_organizacao].lower())
         # Organiza a lista de acordo com o que o usuario pedir, então se ele colocar o 1, ira buscar na pasta livros.csv e nas
         # listas qual é a em ordem alfabética ou numérica e mostra as informações dos livros na ordem que o usuario pediu para organizar
         for itens in lista_organizacao:
